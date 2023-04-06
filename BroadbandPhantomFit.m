@@ -56,8 +56,22 @@ temp_a=readtable([pwd, '\NormalizedPigmentProperties\Absorption.csv']); %open no
 temp_s=readtable([pwd, '\NormalizedPigmentProperties\ReducedScattering.csv']); %open normalized reduced scattering file located in current directory
 
 wav=temp_a{:,1}; %seperate wavelengths
-Absorption=temp_a{:,2:end}; %seperate absorption data
-Scattering=temp_s{:,2:end}; %seperate scattering data
+
+if min(wav)<min(InputWav)
+    BlueDiff=min(InputWav)-min(wav);
+else
+    BlueDiff=0;
+end
+
+if max(wav)>max(InputWav)
+    RedDiff=max(wav)-max(InputWav);
+else
+    RedDiff=0;
+end
+
+wav=temp_a{1+RedDiff:end-BlueDiff,1};
+Absorption=temp_a{1+RedDiff:end-BlueDiff,2:end}; %seperate absorption data
+Scattering=temp_s{1+RedDiff:end-BlueDiff,2:end}; %seperate scattering data
 
 %% Bring target properties into correct wavelength-space
 TargetAbs=interp1(InputWav,InputAbs,wav);
