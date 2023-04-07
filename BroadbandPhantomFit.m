@@ -111,7 +111,7 @@ else
     q0=zeros(size(Absorption,2),1)+.1;
     qmin=zeros(size(Absorption,2),1);
     qmax=q0*10000;
-%     qmax(end)=20; %limit the amount of Al2O3 used
+    qmax(end)=5; %limit the amount of Al2O3 used
     q=fmincon(fun,q0,[],[],[],[],qmin,qmax,[],options);
 
 end
@@ -130,11 +130,11 @@ if PlotResults==1
         0.2667	0.4667	0.6667];
     figure();
     colororder(clr)
-    plot(wav,TargetAbs,'-');
-    hold on;plot(wav,AbsFit,'--');
+    plot(wav,TargetAbs,'-','LineWidth',2.25);
+    hold on;plot(wav,AbsFit,'--','LineWidth',2.25);
     set(gca, 'YScale', 'log')
     set(gca, 'Layer', 'top')
-    xlim([370 950])
+    xlim([min(wav) max(wav)])
 %     ylim([min(min(AbsFit),min(TargetAbs))./2 max(max(AbsFit),max(TargetAbs)).*2])
     ax=gca;
     ax.FontSize = 12;
@@ -144,10 +144,10 @@ if PlotResults==1
 
     figure();
     colororder(clr)
-    plot(wav,TargetScat,'-');
-    hold on;plot(wav,ScatFit,'--');
+    plot(wav,TargetScat,'-','LineWidth',2.25);
+    hold on;plot(wav,ScatFit,'--','LineWidth',2.25);
     set(gca, 'Layer', 'top')
-    xlim([370 950])
+    xlim([min(wav) max(wav)])
 %     ylim([0 max(max(ScatFit),max(TargetScat)).*1.2])
     ax=gca;
     ax.FontSize = 12;

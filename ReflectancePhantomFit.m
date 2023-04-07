@@ -96,7 +96,7 @@ options = optimoptions(@lsqnonlin,'Display','iter');
 EndScat=MinScattering./2;
 q0=zeros(size(Absorption,2),1)+1;
 qmax=q0*10000;
-qmax(end)=20; %limit the amount of Al2O3 used
+qmax(end)=5; %limit the amount of Al2O3 used
 qmin=zeros(size(Absorption,2),1);
 q=qmin;
 while EndScat<MinScattering
@@ -122,8 +122,8 @@ if PlotResults>0
         0.2667	0.4667	0.6667];
     figure();
     colororder(clr)
-    plot(wav,TargetRef,'-');
-    hold on;plot(wav,RefFit,'--');
+    plot(wav,TargetRef,'-','LineWidth',2.25);
+    hold on;plot(wav,RefFit,'--','LineWidth',2.25);
     if UseBands==1
     for k=1:length(fieldnames(Bands))
         r1=rectangle('Position',[min(Bands.(['a' num2str(k)])) 0 max(Bands.(['a' num2str(k)]))-min(Bands.(['a' num2str(k)])) 1],'FaceColor',[0,0,0,.2],'EdgeColor','none');
@@ -131,7 +131,7 @@ if PlotResults>0
     end
     end
     set(gca, 'Layer', 'top')
-    xlim([370 950])
+    xlim([min(wav) max(wav)])
     ylim([0 1])
     ax=gca;
     ax.FontSize = 12;
@@ -141,8 +141,8 @@ if PlotResults>0
     if PlotResults>1
     figure();
     colororder(clr)
-    plot(wav,AbsFit,'-');
-    hold on;plot(wav,ScatFit,'-');
+    plot(wav,AbsFit,'-','LineWidth',2.25);
+    hold on;plot(wav,ScatFit,'-','LineWidth',2.25);
     set(gca, 'YScale', 'log')
     if UseBands==1
     for k=1:length(fieldnames(Bands))
@@ -151,7 +151,7 @@ if PlotResults>0
     end
     end
     set(gca, 'Layer', 'top')
-    xlim([370 950])
+    xlim([min(wav) max(wav)])
     ylim([min(min(AbsFit),min(ScatFit))./2 max(max(AbsFit),max(ScatFit)).*2])
     ax=gca;
     ax.FontSize = 12;
