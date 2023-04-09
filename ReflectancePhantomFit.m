@@ -3,28 +3,34 @@ function [q,RefFit,Wav,AbsFit,ScatFit] = ReflectancePhantomFit(InputRef,InputWav
 % Summary of this function:
 %   varargin takes in two options, and PlotResults and MinScattering, as
 %   name-value pairs. It can also take in specified bands and weights if
-%   desired. If so, they must come before the options.
+%   desired. If so, the band-weight pairs must come before the options.
 %
 %   Bands should be notated by an array of wavelengths in nm (eg [540:610])
 %   and its corresponding weight, usually as a power of 10 (but not
 %   required).
+%       example:        [q,RefFit,Wav,AbsFit,ScatFit] = ReflectancePhantomFit(InputRef,InputWav,[720:830],10^2,[390:400],10^1)
 %
 %   'PlotResults' value of 1 will plot the target reflectance and the
 %   reflectance of the fit, while highlighting the selected bands. A value
 %   of 2 will also plot the absorption and scattering properties of the
-%   phantom fit. A value of zero will supress all plots and is default.
-
+%   phantom fit. A value of zero will supress all plots and is the default if a value is not provided.
+%       example:        [q,RefFit,Wav,AbsFit,ScatFit] = ReflectancePhantomFit(InputRef,InputWav,'PlotResults',2)
+%
 %   'MinScattering' indicates a desired minimum that the reduced
-%   scattering of the diffuse reflectance phantom at 950nm must have in 1/mm. This
+%   scattering of the diffuse reflectance phantom must have in 1/mm (typically at the longest target wavelength). This
 %   is used to prevent unrealsitic Absorption-Scattering pairs that result
-%   in the same reflectance. The default value is 0.5 1/mm.
+%   in the same reflectance. If no value is provided, it will default to a value of 0.5 1/mm.
+%       example:        [q,RefFit,Wav,AbsFit,ScatFit] = ReflectancePhantomFit(InputRef,InputWav,'MinScattering',1.2)
+%
+%
+%       Combined Example: [q,RefFit,Wav,AbsFit,ScatFit] = ReflectancePhantomFit(InputRef,InputWav,[720:830],10^2,[390:400],10^1,'PlotResults',2,'MinScattering',1.2)
 
 
 %% Check for options
 optioncount=0;
 if any(strcmp(varargin,'MinScattering'))
     temploc=find(strcmp(varargin,'MinScattering')==1);
-    SolveSeperate=varargin{temploc+1};
+    MinScattering=varargin{temploc+1};
     optioncount=optioncount+2;
 else
     MinScattering=0.5;
