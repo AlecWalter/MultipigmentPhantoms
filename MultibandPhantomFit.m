@@ -27,7 +27,9 @@ function [q,AbsFit,ScatFit,Wav] = MultibandPhantomFit(InputAbs,InputScat,InputWa
 %   
 %   'PlotResults' value of 1 will plot the target properties and the
 %   properties of the fit, while highlighting the selected bands. A value
-%   of 0 will supress the plot and is default.
+%   of 0 will supress the plot and is default. A value of 2 will plot the
+%   target and predicted properties while not highlighting the selected
+%   bands.
 %% Check varargin, grab band information
 optioncount=0;
 if any(strcmp(varargin,'SolveSeperate'))
@@ -129,21 +131,23 @@ AbsFit=Absorption*q;
 ScatFit=Scattering*q;
 Wav=wav;
 %% Plots
-if PlotResults==1
+if PlotResults>0
     clr=[0.6667	0.2	0.4667
+        0.1333	0.5333	0.2
         0.9333	0.4	0.4667
         0.8	0.7333	0.2667
-        0.1333	0.5333	0.2
         0.4	0.8	0.9333
         0.2667	0.4667	0.6667];
     figure();
     colororder(clr)
     plot(wav,TargetAbs,'-','LineWidth',2.25);
-    hold on;plot(wav,AbsFit,'--','LineWidth',2.25);
+    hold on;plot(wav,AbsFit,':','LineWidth',2.25);
     set(gca, 'YScale', 'log')
+    if PlotResults==1
     for k=1:length(fieldnames(Bands))
         r1=rectangle('Position',[min(Bands.(['a' num2str(k)])) min(min(AbsFit),min(TargetAbs))./2 max(Bands.(['a' num2str(k)]))-min(Bands.(['a' num2str(k)])) max(max(AbsFit),max(TargetAbs)).*2-min(min(AbsFit),min(TargetAbs))./2],'FaceColor',[0,0,0,.2],'EdgeColor','none');
         uistack(r1,'bottom')
+    end
     end
     set(gca, 'Layer', 'top')
     xlim([min(wav) max(wav)])
@@ -157,10 +161,12 @@ if PlotResults==1
     figure();
     colororder(clr)
     plot(wav,TargetScat,'-','LineWidth',2.25);
-    hold on;plot(wav,ScatFit,'--','LineWidth',2.25);
+    hold on;plot(wav,ScatFit,':','LineWidth',2.25);
+    if PlotResults==1
     for k=1:length(fieldnames(Bands))
         r1=rectangle('Position',[min(Bands.(['a' num2str(k)])) 0 max(Bands.(['a' num2str(k)]))-min(Bands.(['a' num2str(k)])) max(max(ScatFit),max(TargetScat)).*1.2-0],'FaceColor',[0,0,0,.2],'EdgeColor','none');
         uistack(r1,'bottom')
+    end
     end
     set(gca, 'Layer', 'top')
     xlim([min(wav) max(wav)])
